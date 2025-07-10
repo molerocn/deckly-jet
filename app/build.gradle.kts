@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "com.molerocn.deckly"
-        minSdk = 24
+        minSdk = 31
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -102,10 +102,11 @@ dependencies {
 
     // navigation
     implementation(libs.androidx.navigation.compose)
-
-    // splash
-    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.hilt.navigation.compose)
 
     // datastore
     implementation(libs.androidx.datastore.preferences)
+
+    // splash
+    implementation(libs.androidx.splashscreen)
 }
