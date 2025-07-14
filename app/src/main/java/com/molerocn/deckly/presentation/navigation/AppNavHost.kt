@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.molerocn.deckly.presentation.screens.add_note.AddNoteScreen
 import com.molerocn.deckly.presentation.screens.home.HomeScreen
 import com.molerocn.deckly.presentation.screens.login.LoginScreen
+import com.molerocn.deckly.presentation.screens.profile.ProfileScreen
 import com.molerocn.deckly.presentation.screens.startup.StartupScreen
 
 @Composable
@@ -47,6 +48,16 @@ fun AppNavHost(
             AddNoteScreen(
                 onBack = {
                     navController.popBackStack()
+                }
+            )
+        }
+        composable(Routes.PROFILE) {
+            ProfileScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                navigateOnSignOut = {
+                    navController.navigate(Routes.LOGIN)
                 }
             )
         }

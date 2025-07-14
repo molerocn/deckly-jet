@@ -6,6 +6,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,7 +21,6 @@ import com.molerocn.deckly.presentation.components.FabMenu
 import com.molerocn.deckly.presentation.components.Spinner
 import com.molerocn.deckly.R
 import com.molerocn.deckly.presentation.navigation.Routes
-import hilt_aggregated_deps._com_molerocn_deckly_presentation_screens_home_HomeViewModel_HiltModules_KeyModule
 
 @Composable
 fun DeckItem(
@@ -56,14 +58,29 @@ fun HomeScreen(
     }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Deckly") },
+                actions = {
+                    IconButton(onClick = { onNavigate(Routes.PROFILE) }) {
+                        Icon(
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "Localized description"
+                        )
+                    }
+                },
+            )
+        },
         floatingActionButton = {
             FabMenu(
                 onAddNote = {
                     if (!deckItems.isEmpty()) {
                         onNavigate(Routes.ADD_NOTE)
                     } else {
-                        Toast.makeText(context, "No se puede agregar una tarjeta si no hay al menos un mazo",
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context, "No se puede agregar una tarjeta si no hay al menos un mazo",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                 },
@@ -121,8 +138,11 @@ fun HomeScreen(
             AddDeckModal(sheetState, onDismissEvent = { showBottomSheet = false })
         }
         if (viewModel.showDeckError) {
-            Toast.makeText(context, "No se pudo crear el mazo, asegurate de que un mazo con ese nombre ya exista",
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "No se pudo crear el mazo, asegurate de que un mazo con ese nombre ya exista",
+                Toast.LENGTH_SHORT
+            ).show()
             viewModel.showDeckError = false
         }
     }
