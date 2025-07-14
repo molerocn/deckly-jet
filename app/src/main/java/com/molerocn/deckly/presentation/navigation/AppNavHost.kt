@@ -5,6 +5,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.molerocn.deckly.presentation.screens.add_note.AddNoteScreen
+import com.molerocn.deckly.presentation.screens.home.HomeScreen
+import com.molerocn.deckly.presentation.screens.login.LoginScreen
 import com.molerocn.deckly.presentation.screens.startup.StartupScreen
 
 @Composable
@@ -25,10 +28,27 @@ fun AppNavHost(
             )
         }
         composable(Routes.LOGIN) {
-            // LoginScreen()
+            LoginScreen(
+                onNavigate = { route ->
+                    navController.navigate(route) {
+                        popUpTo(Routes.STARTUP) { inclusive = true }
+                    }
+                }
+            )
         }
         composable(Routes.HOME) {
-            // HomeScreen()
+            HomeScreen(
+                onNavigate = { route ->
+                    navController.navigate(route)
+                }
+            )
+        }
+        composable(Routes.ADD_NOTE) {
+            AddNoteScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

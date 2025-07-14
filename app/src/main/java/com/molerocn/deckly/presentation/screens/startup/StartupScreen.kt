@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.molerocn.deckly.presentation.components.Spinner
 import com.molerocn.deckly.presentation.navigation.Routes
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun StartupScreen(
     viewModel: StartupViewModel = hiltViewModel(),
@@ -36,6 +36,6 @@ fun StartupScreen(
             .background(Color.White),
         contentAlignment = Alignment.Center
     ) {
-        LoadingIndicator(modifier = Modifier.size(100.dp))
+        Spinner()
     }
 }

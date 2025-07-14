@@ -16,7 +16,6 @@ import javax.inject.Inject
 class AuthHelper @Inject constructor(
     private val request: GetCredentialRequest,
     @ApplicationContext private val context: Context,
-    private val userPreferences: SharedPreferences
 ) {
 
     suspend fun getTokenFromGoogle(): String {
@@ -38,17 +37,6 @@ class AuthHelper @Inject constructor(
             Log.e("signin", "Error desconocido: ${e.message}", e)
         }
         return ""
-    }
-
-    fun isLoggedIn() = userPreferences.getString("access_token", "")!!.isNotEmpty()
-
-    fun signIn(content: Map<String, String>) {
-        val editor = userPreferences.edit()
-        editor.putString("name", content.get("name"))
-        editor.putString("email", content.get("email"))
-        editor.putString("picture", content.get("picture"))
-        editor.putString("access_token", content.get("access_token"))
-        editor.apply()
     }
 
 }

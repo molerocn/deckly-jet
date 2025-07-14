@@ -1,5 +1,6 @@
 package com.molerocn.deckly.presentation.screens.startup
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molerocn.deckly.data.repository.UserRepository
@@ -31,9 +32,8 @@ class StartupViewModel @Inject constructor(
 
     private fun checkLoginStatus() {
         viewModelScope.launch {
-            // set delay of 2 seconds
-            delay(2000)
             val token = userRepository.getUserToken()
+            Log.i("token", token)
             if (token.isNotEmpty()) {
                 _uiState.value = StartupUiState.LoggedIn
             } else {
