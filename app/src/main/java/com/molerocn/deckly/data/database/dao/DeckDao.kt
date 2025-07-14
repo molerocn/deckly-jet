@@ -25,4 +25,8 @@ interface DeckDao {
 
     @Query("DELETE FROM deck_table")
     suspend fun deleteAllDecks()
+
+    // metodo para verificar si existe algun deck con el mismo front
+    @Query("SELECT COUNT(*) > 0 FROM deck_table WHERE name = :name")
+    suspend fun deckExist(name: String): Boolean
 }

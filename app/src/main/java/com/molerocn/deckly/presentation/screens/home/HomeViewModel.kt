@@ -1,5 +1,8 @@
 package com.molerocn.deckly.presentation.screens.home
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molerocn.deckly.domain.model.Deck
@@ -20,6 +23,8 @@ class HomeViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    var showDeckError by mutableStateOf(false)
+
     private val _deckItems = MutableStateFlow<List<Deck>>(emptyList())
     val deckItems: StateFlow<List<Deck>> = _deckItems.asStateFlow()
 
@@ -39,8 +44,12 @@ class HomeViewModel @Inject constructor(
             val newDeck = Deck(
                 name = name,
             )
-            addDeckUseCase(newDeck)
-            loadData()
+            val success = addDeckUseCase(newDeck)
+            if (success) {
+                loadData()
+            } else {
+                showDeckError = true
+            }
         }
     }
 }

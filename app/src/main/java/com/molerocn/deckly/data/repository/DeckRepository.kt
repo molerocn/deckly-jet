@@ -25,4 +25,8 @@ class DeckRepository @Inject constructor(
         deck.id = id.toInt()
         return deck
     }
+
+    suspend fun deckExist(front: String): Boolean {
+        return deckDao.deckExist(front)
+    }
 }

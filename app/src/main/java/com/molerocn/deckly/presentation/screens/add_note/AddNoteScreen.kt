@@ -116,6 +116,7 @@ fun AddNoteScreen(
 
         if (viewModel.showDialog) {
             Toast.makeText(context, "Tarjeta creada con éxito", Toast.LENGTH_SHORT).show()
+            viewModel.showDialog = false
         }
     }
 }

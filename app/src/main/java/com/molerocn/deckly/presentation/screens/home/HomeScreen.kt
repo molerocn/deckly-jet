@@ -18,6 +18,7 @@ import com.molerocn.deckly.presentation.components.FabMenu
 import com.molerocn.deckly.presentation.components.Spinner
 import com.molerocn.deckly.R
 import com.molerocn.deckly.presentation.navigation.Routes
+import hilt_aggregated_deps._com_molerocn_deckly_presentation_screens_home_HomeViewModel_HiltModules_KeyModule
 
 @Composable
 fun DeckItem(
@@ -67,7 +68,6 @@ fun HomeScreen(
 
                 },
                 onAddDeck = {
-                    Log.i("adddeck", "FAB PRESSED: Mostrar BottomSheet")
                     showBottomSheet = true
                 }
             )
@@ -119,6 +119,11 @@ fun HomeScreen(
 
         if (showBottomSheet) {
             AddDeckModal(sheetState, onDismissEvent = { showBottomSheet = false })
+        }
+        if (viewModel.showDeckError) {
+            Toast.makeText(context, "No se pudo crear el mazo, asegurate de que un mazo con ese nombre ya exista",
+                Toast.LENGTH_SHORT).show()
+            viewModel.showDeckError = false
         }
     }
 }
