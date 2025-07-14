@@ -10,9 +10,11 @@ data class DeckEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "description") val description: String = "",
 )
 
 
 fun Deck.toEntityModel() = DeckEntity(
-    name = name
+    name = name,
+    description = description
 )

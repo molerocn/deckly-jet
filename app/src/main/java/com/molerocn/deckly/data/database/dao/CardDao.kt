@@ -22,4 +22,7 @@ interface CardDao {
 
     @Query("DELETE FROM card_table")
     suspend fun deleteAllCards()
+
+    @Query("SELECT COUNT(*) FROM card_table WHERE due <= :now AND deck_id = :deckId")
+    suspend fun amountOfDueCardsByDeck(deckId: Int, now: Long = System.currentTimeMillis()): Int
 }

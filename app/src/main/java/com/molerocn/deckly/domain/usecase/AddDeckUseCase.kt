@@ -7,11 +7,10 @@ import javax.inject.Inject
 class AddDeckUseCase @Inject constructor(private val repository: DeckRepository) {
 
     // TODO: agregar logica para decidir si obtener los datos desde api o local database
-    suspend operator fun invoke(deck: Deck): Boolean {
+    suspend operator fun invoke(deck: Deck): Deck? {
         if (repository.deckExist(deck.name)) {
-            return false
+            return null
         }
-        repository.addDeckToDatabase(deck)
-        return true
+        return repository.addDeckToDatabase(deck)
     }
 }

@@ -22,21 +22,6 @@ import com.molerocn.deckly.presentation.components.Spinner
 import com.molerocn.deckly.R
 import com.molerocn.deckly.presentation.navigation.Routes
 
-@Composable
-fun DeckItem(
-    title: String,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
-        Text(text = title, style = MaterialTheme.typography.titleLarge)
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -126,7 +111,7 @@ fun HomeScreen(
                 ) {
                     items(deckItems) { deck ->
                         DeckItem(
-                            title = deck.name,
+                            deck = deck,
                             onClick = { onNavigate("deck/${deck.id}") }
                         )
                     }

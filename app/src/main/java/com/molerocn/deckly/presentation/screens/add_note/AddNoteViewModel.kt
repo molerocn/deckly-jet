@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.molerocn.deckly.domain.model.Card
+import com.molerocn.deckly.domain.model.CardModel
 import com.molerocn.deckly.domain.model.Deck
 import com.molerocn.deckly.domain.usecase.AddCardUseCase
 import com.molerocn.deckly.domain.usecase.GetDecksUseCase
@@ -38,7 +38,7 @@ class AddNoteViewModel @Inject constructor(
     fun onGuardar() {
         viewModelScope.launch {
             selectedDeck?.let { deck ->
-                val card = Card(
+                val card = CardModel(
                     deckId = deck.id,
                     front = frontText,
                     back = backText

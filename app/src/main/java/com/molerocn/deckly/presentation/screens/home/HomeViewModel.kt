@@ -39,13 +39,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun addDeck(name: String) {
+    fun addDeck(name: String, description: String) {
         viewModelScope.launch {
             val newDeck = Deck(
                 name = name,
+                description = description
             )
-            val success = addDeckUseCase(newDeck)
-            if (success) {
+            val response = addDeckUseCase(newDeck)
+            if (response != null) {
                 loadData()
             } else {
                 showDeckError = true

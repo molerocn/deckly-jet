@@ -32,6 +32,7 @@ fun AddDeckModal(
 ) {
     // Form state
     var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
     return ModalBottomSheet(
@@ -53,17 +54,25 @@ fun AddDeckModal(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+            
+            OutlinedTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = { Text("Descripción del mazo") },
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Button(
                 onClick = {
-                    if (title.isNotBlank()) {
-                        viewModel.addDeck(title.trim())
+                    if (title.isNotBlank() && description.isNotBlank()) {
+                        viewModel.addDeck(title.trim(), description.trim())
                         scope.launch {
                             sheetState.hide()
                         }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
                                 onDismissEvent()
                                 title = ""
+                                description = ""
                             }
                         }
                     }

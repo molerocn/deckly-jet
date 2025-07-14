@@ -19,7 +19,9 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideRoom(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, MainDatabase::class.java, DATABASE_NAME).build()
+        Room.databaseBuilder(context, MainDatabase::class.java, DATABASE_NAME)
+            .fallbackToDestructiveMigration(true)
+            .build()
 
     @Singleton
     @Provides
@@ -28,4 +30,8 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideDeckDao(db: MainDatabase) = db.getDeckDao()
+
+    @Singleton
+    @Provides
+    fun provideReviewLogDao(db: MainDatabase) = db.getReviewLogDao()
 }
