@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddDeckModal(
     sheetState: SheetState,
-    onDismissEvent: Function0<Unit>,
+    onDismissEvent: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     // Form state
@@ -64,7 +64,7 @@ fun AddDeckModal(
 
             Button(
                 onClick = {
-                    if (title.isNotBlank() && description.isNotBlank()) {
+                    if (title.isNotBlank()) {
                         viewModel.addDeck(title.trim(), description.trim())
                         scope.launch {
                             sheetState.hide()

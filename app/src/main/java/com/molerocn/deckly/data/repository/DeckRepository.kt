@@ -22,8 +22,7 @@ class DeckRepository @Inject constructor(
 
     suspend fun addDeckToDatabase(deck: Deck): Deck {
         val id = deckDao.insertDeck(deck.toEntityModel())
-        deck.id = id.toInt()
-        return deck
+        return deck.copy(id = id.toInt())
     }
 
     suspend fun deckExist(front: String): Boolean {

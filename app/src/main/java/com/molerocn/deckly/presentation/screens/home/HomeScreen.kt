@@ -1,6 +1,6 @@
 package com.molerocn.deckly.presentation.screens.home
 
-import android.util.Log
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.molerocn.deckly.presentation.components.FabMenu
 import com.molerocn.deckly.presentation.components.Spinner
 import com.molerocn.deckly.R
@@ -31,6 +31,7 @@ fun HomeScreen(
 ) {
     val isLoading by viewModel.isLoading.collectAsState()
     val deckItems by viewModel.deckItems.collectAsState()
+    val mountCards by viewModel.mountCards.collectAsState()
 
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -105,16 +106,22 @@ fun HomeScreen(
                     }
                 }
 
-                else -> LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-                    items(deckItems) { deck ->
-                        DeckItem(
-                            deck = deck,
-                            onClick = { onNavigate("deck/${deck.id}") }
-                        )
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        items(deckItems) { deck ->
+                            val name = Uri.encode(deck.name)
+                            val description = Uri.encode(deck.description)
+                            val mount = deck.amountOfCardsToBeStudy
+                            DeckItem(
+                                deck = deck,
+                                onClick = { onNavigate("deck_detail/${deck.id}/$name/$description/$mount") }
+                            )
+                        }
                     }
+                    // agregar componente aqui que muestre amountCards al final de todo el view
                 }
             }
         }
@@ -125,7 +132,7 @@ fun HomeScreen(
         if (viewModel.showDeckError) {
             Toast.makeText(
                 context,
-                "No se pudo crear el mazo, asegurate de que un mazo con ese nombre ya exista",
+                "No se pudo crear el mazo, asegurate de que un mazo con ese nombre no exista",
                 Toast.LENGTH_SHORT
             ).show()
             viewModel.showDeckError = false

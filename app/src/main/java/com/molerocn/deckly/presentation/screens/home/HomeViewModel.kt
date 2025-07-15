@@ -1,5 +1,6 @@
 package com.molerocn.deckly.presentation.screens.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,11 +23,13 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
     var showDeckError by mutableStateOf(false)
 
     private val _deckItems = MutableStateFlow<List<Deck>>(emptyList())
     val deckItems: StateFlow<List<Deck>> = _deckItems.asStateFlow()
+
+    private val _mountCards = MutableStateFlow(0)
+    val mountCards: StateFlow<Int> = _mountCards.asStateFlow()
 
     init {
         loadData()
@@ -35,7 +38,11 @@ class HomeViewModel @Inject constructor(
     fun loadData() {
         viewModelScope.launch {
             _deckItems.value = getDecksUseCase()
+            _deckItems.value.map { deck ->
+                Log.i("", "description: ${deck.description}")
+            }
             _isLoading.value = false
+            _mountCards.value = _deckItems.value.sumOf { it.amountOfCardsToBeStudy }
         }
     }
 
@@ -53,4 +60,22 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+//     fun addCardEvent(deckId: Int) {
+//         val updatedList = _deckItems.value.map { deck ->
+//             if (deck.id == deckId) {
+//                 Log.i("", "agregando un card a amount of cards to be study")
+//                 deck.copy(amountOfCardsToBeStudy = deck.amountOfCardsToBeStudy + 1)
+//             } else {
+//                 deck
+//             }
+//         }
+//         _deckItems.value = updatedList
+//     }
+
 }
+
+// prompt: necesito saber por que no se actualiza los deck de home screen, cuando creo un card desde
+// addnotescreen, quiero que el amountofCards de el deck en el que se creo un card se aumente en 1
+// cada vez que le doy en guardar desde el addnotescreen , te comparto los siguientes archivos
+// homeScreen, homeviewmodel, addnotescreen, addnoteviewmodel

@@ -37,4 +37,8 @@ class CardRepository @Inject constructor(
     suspend fun amountOfDueCardsByDeck(deckId: Int): Int {
         return cardDao.amountOfDueCardsByDeck(deckId)
     }
+
+    suspend fun isThereCardWithFrontInDeck(deckId: Int, front: String): Boolean {
+        return cardDao.isThereCardWithFrontInDeck(deckId, front)
+    }
 }

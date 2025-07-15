@@ -14,9 +14,10 @@ class GetDecksUseCase @Inject constructor(
         val decks = deckRepository.getAllDecksFromDatabase()
         return decks.map { deck ->
             Deck(
+                id = deck.id,
                 name = deck.name,
                 description = deck.description,
-                amountOfCardsToByStudy = cardRepository.amountOfDueCardsByDeck(deck.id)
+                amountOfCardsToBeStudy = cardRepository.amountOfDueCardsByDeck(deck.id)
             )
         }
     }

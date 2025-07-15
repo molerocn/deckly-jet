@@ -25,4 +25,8 @@ interface CardDao {
 
     @Query("SELECT COUNT(*) FROM card_table WHERE due <= :now AND deck_id = :deckId")
     suspend fun amountOfDueCardsByDeck(deckId: Int, now: Long = System.currentTimeMillis()): Int
+
+    @Query("SELECT EXISTS(SELECT 1 FROM card_table WHERE deck_id = :deckId AND front = :front)")
+    suspend fun isThereCardWithFrontInDeck(deckId: Int, front: String): Boolean
+
 }
