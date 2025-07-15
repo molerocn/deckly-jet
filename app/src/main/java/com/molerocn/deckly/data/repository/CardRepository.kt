@@ -26,8 +26,7 @@ class CardRepository @Inject constructor(
 
     suspend fun addCardToDatabase(card: CardModel): CardModel {
         val id = cardDao.insertCard(card.toEntityModel())
-        card.id = id.toInt()
-        return card
+        return card.copy(id = id.toInt())
     }
 
     suspend fun clearCards() {

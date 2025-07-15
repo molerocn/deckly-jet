@@ -41,7 +41,13 @@ data class CardEntity(
 )
 
 fun CardModel.toEntityModel() = CardEntity(
+    id = id,
     deckId = deckId,
     front = front,
-    back = back
+    back = back,
+    status = status.name,
+    due = due,
+    lastReview = lastReview,
+    reps = reps,
+    lapses = lapses
 )

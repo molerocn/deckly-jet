@@ -7,5 +7,5 @@ object Routes {
     const val PROFILE = "profile"
     const val ADD_NOTE = "add_note"
     const val DECK_DETAIL = "deck_detail/{deckId}/{name}/{description}/{mountCards}"
-    const val STUDY_CARD = "study_card"
+    const val STUDY_CARD = "study_card/{deckId}"
 }

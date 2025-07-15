@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.molerocn.deckly.presentation.screens.add_note.AddNoteScreen
 import com.molerocn.deckly.presentation.screens.deck_detail.DeckDetailScreen
+import com.molerocn.deckly.presentation.screens.study_card.StudyCardScreen
 import com.molerocn.deckly.presentation.screens.home.HomeScreen
 import com.molerocn.deckly.presentation.screens.login.LoginScreen
 import com.molerocn.deckly.presentation.screens.profile.ProfileScreen
@@ -89,6 +90,22 @@ fun AppNavHost(
                 onNavigate = { route ->
                     navController.navigate(route)
                 }
+            )
+        }
+        composable(
+            Routes.STUDY_CARD,
+            arguments = listOf(
+                navArgument("deckId") { type = NavType.IntType },
+            )
+        ) { backStackEntry ->
+
+            StudyCardScreen(
+                onNavigate = { route ->
+                    navController.navigate(route)
+                },
+                onBack = {
+                    navController.popBackStack()
+                },
             )
         }
     }

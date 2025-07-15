@@ -23,6 +23,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -42,6 +44,7 @@ fun DeckDetailScreen(
     onNavigate: (String) -> Unit,
     onBack: () -> Unit
 ) {
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -84,7 +87,8 @@ fun DeckDetailScreen(
             }
 
             Button(
-                onClick = { onNavigate(Routes.STUDY_CARD) },
+                enabled = mountCards > 0,
+                onClick = { onNavigate("study_card/${deckId}") },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp)
