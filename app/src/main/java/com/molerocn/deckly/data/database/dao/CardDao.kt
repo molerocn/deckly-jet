@@ -14,8 +14,11 @@ import retrofit2.http.PUT
 @Dao
 interface CardDao {
 
-    @Query("SELECT * FROM card_table WHERE deck_id = :deckId")
-    suspend fun getCardsByDeck(deckId: Int): List<CardEntity>
+    @Query("SELECT * FROM card_table WHERE deck_id = :deckId AND due <= :now")
+    suspend fun getCardsByDeck(
+        deckId: Int,
+        now: Long = System.currentTimeMillis()
+    ): List<CardEntity>
 
     @Query("SELECT * FROM card_table WHERE id = :deckId")
     suspend fun getCard(deckId: Int): CardEntity

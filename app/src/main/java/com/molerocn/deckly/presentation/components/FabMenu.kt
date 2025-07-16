@@ -47,6 +47,10 @@ fun FabMenu(
             expanded = fabMenuExpanded,
             button = {
                 ToggleFloatingActionButton(
+                    containerColor = ToggleFloatingActionButtonDefaults.containerColor(
+                        initialColor = Color(0xFFF5F5F5),
+                        finalColor = Color(0xFF46391E)
+                    ),
                     modifier = Modifier
                         .semantics {
                             stateDescription = if (fabMenuExpanded) "Expandido" else "Colapsado"
@@ -74,6 +78,7 @@ fun FabMenu(
         ) {
             menuItems.forEach { (icon, label) ->
                 FloatingActionButtonMenuItem(
+                    containerColor = Color(0xFFF5F5F5),
                     onClick = {
                         fabMenuExpanded = false
                         Log.i("FabMenu", "Item seleccionado: $label") // Para debug

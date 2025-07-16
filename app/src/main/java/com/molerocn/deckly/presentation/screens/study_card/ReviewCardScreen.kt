@@ -1,11 +1,13 @@
 package com.molerocn.deckly.presentation.screens.study_card
 
+import FinishScreenContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,7 +51,7 @@ fun ReviewCardScreen(
     viewModel: ReviewCardViewModel = hiltViewModel()
 ) {
 
-    val options = listOf("De nuevo", "Difícil", "Bien", "Facil")
+    val options = listOf("Otra", "Difícil", "Bien", "Facil")
 
     val isLoading by viewModel.isLoading.collectAsState()
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -132,34 +136,50 @@ fun ReviewCardScreen(
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .padding(bottom = 16.dp)
                     ) {
                         if (isAnswerRevealed) {
                             Row(
-                                modifier = Modifier.padding(horizontal = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-
                                 options.forEachIndexed { index, label ->
-                                    val difficult = when (index) {
-                                        0 -> Difficult.AGAIN
-                                        1 -> Difficult.HARD
-                                        2 -> Difficult.GOOD
-                                        3 -> Difficult.EASY
-                                        else -> Difficult.EASY
+                                    val (difficult, backgroundColor) = when (index) {
+                                        0 -> Difficult.AGAIN to Color(0xFFFFCDD2) // Rojo claro
+                                        1 -> Difficult.HARD to Color(0xFFFFE0B2)  // Naranja claro
+                                        2 -> Difficult.GOOD to Color(0xFFC8E6C9)  // Verde claro
+                                        3 -> Difficult.EASY to Color(0xFFBBDEFB)  // Azul claro
+                                        else -> Difficult.EASY to Color.LightGray
                                     }
+
                                     ElevatedButton(
                                         onClick = { viewModel.reviewCard(difficult) },
+                                        colors = ButtonDefaults.elevatedButtonColors(
+                                            containerColor = backgroundColor,
+                                            contentColor = Color.Black
+                                        ),
+                                        modifier = Modifier.weight(1f)
                                     ) {
-                                        Text(label)
+                                        Text(
+                                            text = label,
+                                            style = MaterialTheme.typography.labelLarge
+                                        )
                                     }
                                 }
                             }
+
                         } else {
                             Button(
                                 onClick = { viewModel.revealAnswer() },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.Black
+                                ),
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
+                                    .padding(24.dp)
+                                    .fillMaxWidth(0.8f)
+                                    .height(56.dp),
+                                shape = MaterialTheme.shapes.medium
                             ) {
                                 Text(text = "Ver respuesta")
                             }

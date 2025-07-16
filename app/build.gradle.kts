@@ -113,4 +113,8 @@ dependencies {
 
     implementation("io.coil-kt.coil3:coil-compose:3.2.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.2.0")
+
+    // animations with particles
+    implementation ("nl.dionsegijn:konfetti-compose:2.0.5")
+
 }

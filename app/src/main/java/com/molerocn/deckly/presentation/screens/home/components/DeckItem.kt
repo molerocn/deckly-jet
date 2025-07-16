@@ -50,27 +50,29 @@ fun DeckItem(
                     },
                     onLongClickLabel = "Opciones"
                 ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)) // Fondo oscuro
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            shape = RoundedCornerShape(15.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)) // Fondo gris muy claro
         ) {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 14.dp)
+                    .padding(horizontal = 16.dp, vertical = 18.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = deck.name,
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = Color.Black,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 )
                 Text(
                     text = "${deck.amountOfCardsToBeStudy} tarjetas",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color(0xFFF5C518) // Dorado
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        color = Color(0xFF00796B) // Verde oscuro elegante
+                    )
                 )
             }
         }
@@ -79,14 +81,20 @@ fun DeckItem(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            DropdownMenuItem(text = { Text("Editar") }, onClick = {
-                expanded = false
-                onEdit()
-            })
-            DropdownMenuItem(text = { Text("Eliminar") }, onClick = {
-                expanded = false
-                onDelete()
-            })
+            DropdownMenuItem(
+                text = { Text("Editar") },
+                onClick = {
+                    expanded = false
+                    onEdit()
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("Eliminar") },
+                onClick = {
+                    expanded = false
+                    onDelete()
+                }
+            )
         }
     }
 }

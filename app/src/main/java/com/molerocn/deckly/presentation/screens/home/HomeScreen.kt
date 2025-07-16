@@ -66,12 +66,12 @@ fun HomeScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.sync() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Refresh,
-                            contentDescription = "Actualizar"
-                        )
-                    }
+                    // IconButton(onClick = { viewModel.sync() }) {
+                    //     Icon(
+                    //         imageVector = Icons.Filled.Refresh,
+                    //         contentDescription = "Actualizar"
+                    //     )
+                    // }
 
                     IconButton(onClick = { onNavigate(Routes.PROFILE) }) {
                         if (!imageUrl.isEmpty()) {

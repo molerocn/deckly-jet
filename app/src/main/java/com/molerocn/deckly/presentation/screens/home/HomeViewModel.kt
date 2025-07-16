@@ -52,9 +52,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _imageUrl.value = dataStoreManager.getImageUrl()
             _deckItems.value = getDecksUseCase(withCardsCount = true)
-            _deckItems.value.map { deck ->
-                Log.i("", "description: ${deck.description}")
-            }
             _isLoading.value = false
             _mountCards.value = _deckItems.value.sumOf { it.amountOfCardsToBeStudy }
         }
