@@ -1,23 +1,33 @@
 package com.molerocn.deckly.presentation.screens.home
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import com.molerocn.deckly.data.preferences.DataStoreManager
 import com.molerocn.deckly.presentation.components.FabMenu
-import com.molerocn.deckly.R
 import com.molerocn.deckly.domain.model.Deck
 import com.molerocn.deckly.presentation.navigation.Routes
+import com.molerocn.deckly.presentation.screens.home.components.AddDeckModal
+import com.molerocn.deckly.presentation.screens.home.components.DeckItem
+import com.molerocn.deckly.presentation.screens.home.components.DeleteDialog
+import com.molerocn.deckly.presentation.theme.myFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +37,7 @@ fun HomeScreen(
     onNavigate: (String) -> Unit
 ) {
     val isLoading by viewModel.isLoading.collectAsState()
+    val imageUrl by viewModel.imageUrl.collectAsState()
     var editDeck by remember { mutableStateOf(false) }
     var openAlertDialog by remember { mutableStateOf(false) }
     var currentDeck by remember { mutableStateOf(Deck(name = "")) }
@@ -46,19 +57,38 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Deckly") },
+                title = {
+                    Text(
+                        text = "Deckly",
+                        fontFamily = myFontFamily,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
                 actions = {
                     IconButton(onClick = { viewModel.sync() }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_refresh),
-                            contentDescription = "Localized description"
+                            imageVector = Icons.Filled.Refresh,
+                            contentDescription = "Actualizar"
                         )
                     }
+
                     IconButton(onClick = { onNavigate(Routes.PROFILE) }) {
-                        Icon(
-                            imageVector = Icons.Filled.AccountCircle,
-                            contentDescription = "Localized description"
-                        )
+                        if (!imageUrl.isEmpty()) {
+                            Log.i("", "image url is $imageUrl")
+                            AsyncImage(
+                                model = imageUrl,
+                                contentDescription = "Foto de perfil",
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Filled.AccountCircle,
+                                contentDescription = "Perfil"
+                            )
+                        }
                     }
                 },
             )
@@ -116,6 +146,8 @@ fun HomeScreen(
                     }
                     if (openAlertDialog) {
                         DeleteDialog(
+                            title = "¿Seguro que desea eliminar este mazo?",
+                            description = "Eliminar el mazo eliminará las tarjetas registradas también.",
                             onConfirmation = { viewModel.deleteDeck(currentDeck) },
                             onDismissRequest = { openAlertDialog = false }
                         )

@@ -18,6 +18,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import com.molerocn.deckly.R
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 
 object Options {
     const val DECK = "Mazo"
@@ -64,6 +65,7 @@ fun FabMenu(
                         }
                     }
                     Icon(
+                        tint = if (fabMenuExpanded) Color.White else Color.Black,
                         painter = rememberVectorPainter(icon),
                         contentDescription = null
                     )

@@ -17,13 +17,15 @@ class DataStoreManager(private val context: Context) {
         private val TOKEN_KEY = stringPreferencesKey("auth_token")
         private val NAME_KEY = stringPreferencesKey("user_name")
         private val EMAIL_KEY = stringPreferencesKey("user_email")
+        private val PICTURE_KEY = stringPreferencesKey("picture")
     }
 
-    suspend fun saveUserData(token: String, name: String, email: String) {
+    suspend fun saveUserData(token: String, name: String, email: String, picture: String) {
         context.dataStore.edit { prefs ->
             prefs[TOKEN_KEY] = token
             prefs[NAME_KEY] = name
             prefs[EMAIL_KEY] = email
+            prefs[PICTURE_KEY] = picture
         }
     }
 
@@ -44,5 +46,10 @@ class DataStoreManager(private val context: Context) {
     suspend fun getUserEmail(): String {
         val prefs = context.dataStore.data.first()
         return prefs[EMAIL_KEY] ?: ""
+    }
+
+    suspend fun getImageUrl(): String {
+        val prefs = context.dataStore.data.first()
+        return prefs[PICTURE_KEY] ?: ""
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molerocn.deckly.domain.model.CardModel
+import com.molerocn.deckly.domain.usecase.DeleteCardUseCase
 import com.molerocn.deckly.domain.usecase.GetCardsUseCase
 import com.molerocn.deckly.domain.usecase.ReviewCardUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,8 @@ enum class Difficult {
 class ReviewCardViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getCardsUseCase: GetCardsUseCase,
-    private val reviewCardUseCase: ReviewCardUseCase
+    private val reviewCardUseCase: ReviewCardUseCase,
+    private val deleteCardUseCase: DeleteCardUseCase
 ) : ViewModel() {
 
     // Agrega estas variables en tu ViewModel
@@ -99,6 +101,21 @@ class ReviewCardViewModel @Inject constructor(
 
     }
 
+    fun deleteCard() {
+        viewModelScope.launch {
+            deleteCardUseCase(_currentCard.value!!)
+
+            _cardsItems.value = _cardsItems.value.toMutableList().apply {
+                remove(_currentCard.value!!)
+            }
+
+            if (_cardsItems.value.isEmpty()) {
+                _isThereNoCards.value = true
+            }
+
+            _currentCard.value = _cardsItems.value.firstOrNull { it.id != _currentCard.value!!.id }
+        }
+    }
 
     fun goBackInHistory() {
         viewModelScope.launch {

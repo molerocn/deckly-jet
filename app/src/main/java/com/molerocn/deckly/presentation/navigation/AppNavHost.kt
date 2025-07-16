@@ -14,6 +14,7 @@ import com.molerocn.deckly.presentation.screens.home.HomeScreen
 import com.molerocn.deckly.presentation.screens.login.LoginScreen
 import com.molerocn.deckly.presentation.screens.profile.ProfileScreen
 import com.molerocn.deckly.presentation.screens.startup.StartupScreen
+import com.molerocn.deckly.presentation.screens.startup.WelcomeScreen
 
 @Composable
 fun AppNavHost(
@@ -23,6 +24,13 @@ fun AppNavHost(
         navController = navController,
         startDestination = Routes.STARTUP
     ) {
+        composable(Routes.WELCOME) {
+            WelcomeScreen { route ->
+                navController.navigate(route) {
+                    popUpTo(Routes.STARTUP) { inclusive = true }
+                }
+            }
+        }
         composable(Routes.STARTUP) {
             StartupScreen(
                 onNavigate = { route ->
@@ -79,6 +87,8 @@ fun AppNavHost(
                     navController.popBackStack()
                 },
                 navController = navController,
+                // TODO: eliminar esta funcion y actualizar desde screen de add or edit
+                // TODO: eliminar card added tambien y suprimir logica innecesaria
                 onBackAfterInsert = {
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.HOME) { inclusive = true }

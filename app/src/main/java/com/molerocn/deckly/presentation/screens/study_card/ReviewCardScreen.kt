@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ElevatedButton
@@ -26,14 +27,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.molerocn.deckly.presentation.components.Spinner
 import com.molerocn.deckly.R
 import com.molerocn.deckly.presentation.navigation.Routes
+import com.molerocn.deckly.presentation.screens.home.components.DeleteDialog
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -46,6 +50,7 @@ fun ReviewCardScreen(
     val options = listOf("De nuevo", "Difícil", "Bien", "Facil")
 
     val isLoading by viewModel.isLoading.collectAsState()
+    var showDeleteDialog by remember { mutableStateOf(false) }
     val hasHistoryStack by viewModel.hasHistoryStack.collectAsState()
     val isThereNoCards by viewModel.isThereNoCards.collectAsState()
     val isAnswerRevealed by viewModel.isAnswerRevealed.collectAsState()
@@ -73,6 +78,14 @@ fun ReviewCardScreen(
                         }
                     }
                     if (!isThereNoCards) {
+                        IconButton(onClick = {
+                            showDeleteDialog = true
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = "Eliminar tarjeta"
+                            )
+                        }
                         IconButton(onClick = {
                             onNavigate("${Routes.ADD_NOTE}?cardId=${currentCard!!.id}&deckId=${currentCard!!.deckId}&front=${currentCard!!.front}&back=${currentCard!!.back}")
                         }) {
@@ -151,6 +164,18 @@ fun ReviewCardScreen(
                                 Text(text = "Ver respuesta")
                             }
                         }
+                    }
+
+                    if (showDeleteDialog) {
+                        DeleteDialog(
+                            title = "¿Estás seguro que deseas eliminar la tarjeta actual?",
+                            description = "Este proceso es irreversible",
+                            onDismissRequest = { showDeleteDialog = false },
+                            onConfirmation = {
+                                viewModel.deleteCard()
+                                showDeleteDialog = false
+                            }
+                        )
                     }
                 }
             }

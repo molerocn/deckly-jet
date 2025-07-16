@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.molerocn.deckly.domain.model.CardModel
-import java.util.Date
+import java.time.Instant
 
 @Entity(
     tableName = "card_table",
@@ -37,7 +37,10 @@ data class CardEntity(
     @ColumnInfo(name = "elapsed_days") val elapsedDays: Double = 0.0,
 
     @ColumnInfo(name = "reps") val reps: Int = 0,
-    @ColumnInfo(name = "lapses") val lapses: Int = 0
+    @ColumnInfo(name = "lapses") val lapses: Int = 0,
+
+    @ColumnInfo(name = "updated_at") val updatedAt: Long = Instant.now().toEpochMilli(),
+    @ColumnInfo(name = "sync_pending") val syncPending: Boolean = false
 )
 
 fun CardModel.toEntityModel() = CardEntity(

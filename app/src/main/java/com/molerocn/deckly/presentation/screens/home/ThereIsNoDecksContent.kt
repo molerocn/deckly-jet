@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.molerocn.deckly.R
 
@@ -22,20 +24,27 @@ fun ThereIsNoDecksContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(id = R.drawable.empty_box),
-            contentDescription = "No hay decks",
-            modifier = Modifier
-                .size(50.dp)
+            contentDescription = "Sin mazos",
+            modifier = Modifier.size(64.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "No hay mazos aún",
-            style = MaterialTheme.typography.bodyLarge,
+            text = "Aún no tienes mazos",
+            style = MaterialTheme.typography.titleMedium,
+            color = Color.White,
+            fontWeight = FontWeight.Medium
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Crea tu primer mazo tocando el botón '+'",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFFCCCCCC)
         )
     }
 }

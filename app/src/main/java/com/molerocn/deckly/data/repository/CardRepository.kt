@@ -12,15 +12,9 @@ class CardRepository @Inject constructor(
     private val cardDao: CardDao
 ) {
 
-    // suspend fun getCardsByDeckFromApi(): List<Card> {
-    //     // TODO: agregar logica para filtrar mediante el id de deck
-    //     val response = api.getCards()
-    //
-    //     // return response.map { it.toDomainModel() }
-    // }
-    suspend fun getSingleCardById(cardId: Int): CardModel {
-        val response = cardDao.getCard(cardId)
-        return response.toDomainModel()
+    suspend fun getCardsByDeckFromApi(deckId: Int): List<CardModel> {
+        val response = api.getCardsByDeck(deckId)
+        return response.map { it.toDomainModel() }
     }
 
     suspend fun getCardsByDeckFromDatabase(deckId: Int): List<CardModel> {
@@ -47,5 +41,11 @@ class CardRepository @Inject constructor(
 
     suspend fun updateCard(card: CardModel) {
         cardDao.updateCard(card.toEntityModel())
+    }
+
+    suspend fun deleteCards(vararg cards: CardModel) {
+        for (card in cards) {
+            cardDao.deleteCards(card.toEntityModel())
+        }
     }
 }

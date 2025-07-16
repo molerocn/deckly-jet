@@ -18,7 +18,8 @@ class UserRepository @Inject constructor(
             dataStoreManager.saveUserData(
                 token = it.accessToken,
                 name = it.name.substringBefore(" "),
-                email = it.email
+                email = it.email,
+                picture = it.picture,
             )
         }
         return response?.toDomainModel()

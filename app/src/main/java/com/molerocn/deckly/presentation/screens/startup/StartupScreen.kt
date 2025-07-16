@@ -25,7 +25,7 @@ fun StartupScreen(
     LaunchedEffect(uiState) {
         when (uiState) {
             StartupUiState.LoggedIn -> onNavigate(Routes.HOME)
-            StartupUiState.NotLoggedIn -> onNavigate(Routes.LOGIN)
+            StartupUiState.NotLoggedIn -> onNavigate(Routes.WELCOME)
             StartupUiState.Loading -> Unit
         }
     }

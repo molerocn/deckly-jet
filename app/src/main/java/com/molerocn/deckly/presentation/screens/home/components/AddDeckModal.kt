@@ -1,4 +1,4 @@
-package com.molerocn.deckly.presentation.screens.home
+package com.molerocn.deckly.presentation.screens.home.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.molerocn.deckly.domain.model.Deck
+import com.molerocn.deckly.presentation.screens.home.HomeViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

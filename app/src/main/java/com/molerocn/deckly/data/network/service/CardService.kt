@@ -10,10 +10,11 @@ class CardService @Inject constructor(
     private val api: CardApiClient
 ) {
 
-    suspend fun getCards(): List<CardModelApi> {
+    suspend fun getCardsByDeck(deckId: Int): List<CardModelApi> {
 
         return withContext(Dispatchers.IO) {
-            val response = api.getAllCards()
+            val body = mapOf("deckId" to deckId)
+            val response = api.getCardsByDeck(body)
             response.body() ?: emptyList()
         }
     }

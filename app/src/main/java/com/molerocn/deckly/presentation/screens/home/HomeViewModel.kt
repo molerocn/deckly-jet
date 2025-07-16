@@ -4,8 +4,11 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.molerocn.deckly.data.preferences.DataStoreManager
 import com.molerocn.deckly.domain.model.Deck
 import com.molerocn.deckly.domain.usecase.AddDeckUseCase
 import com.molerocn.deckly.domain.usecase.DeleteDeckUseCase
@@ -23,11 +26,15 @@ class HomeViewModel @Inject constructor(
     private val getDecksUseCase: GetDecksUseCase,
     private val addDeckUseCase: AddDeckUseCase,
     private val updateDeckUseCase: UpdateDeckUseCase,
-    private val deleteDeckUseCase: DeleteDeckUseCase
+    private val deleteDeckUseCase: DeleteDeckUseCase,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _imageUrl = MutableStateFlow("")
+    val imageUrl: StateFlow<String> = _imageUrl.asStateFlow()
 
     var showDeckError by mutableStateOf(false)
 
@@ -43,6 +50,7 @@ class HomeViewModel @Inject constructor(
 
     fun loadData() {
         viewModelScope.launch {
+            _imageUrl.value = dataStoreManager.getImageUrl()
             _deckItems.value = getDecksUseCase(withCardsCount = true)
             _deckItems.value.map { deck ->
                 Log.i("", "description: ${deck.description}")

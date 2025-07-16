@@ -1,6 +1,5 @@
-package com.molerocn.deckly.presentation.screens.home
+package com.molerocn.deckly.presentation.screens.home.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,8 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.molerocn.deckly.domain.model.Deck
 
@@ -33,7 +34,6 @@ fun DeckItem(
     onDelete: () -> Unit,
     onEdit: () -> Unit
 ) {
-
     var expanded by remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
 
@@ -48,42 +48,44 @@ fun DeckItem(
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                         expanded = true
                     },
-                    onLongClickLabel = "Mostrar opciones"
-
+                    onLongClickLabel = "Opciones"
                 ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            shape = RoundedCornerShape(12.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E)) // Fondo oscuro
         ) {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .padding(horizontal = 16.dp, vertical = 14.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = deck.name,
-                    style = MaterialTheme.typography.titleMedium
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
                 )
-
                 Text(
                     text = "${deck.amountOfCardsToBeStudy} tarjetas",
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(0xFFF5C518) // Dorado
                 )
             }
         }
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(text = { Text("Editar") }, onClick = {
-                onEdit()
                 expanded = false
+                onEdit()
             })
             DropdownMenuItem(text = { Text("Eliminar") }, onClick = {
-                onDelete()
                 expanded = false
+                onDelete()
             })
         }
     }
