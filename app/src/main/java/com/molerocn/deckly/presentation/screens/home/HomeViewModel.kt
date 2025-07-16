@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.molerocn.deckly.domain.model.Deck
 import com.molerocn.deckly.domain.usecase.AddDeckUseCase
+import com.molerocn.deckly.domain.usecase.DeleteDeckUseCase
+import com.molerocn.deckly.domain.usecase.UpdateDeckUseCase
 import com.molerocn.deckly.domain.usecase.GetDecksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,10 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getDecksUseCase: GetDecksUseCase,
-    private val addDeckUseCase: AddDeckUseCase
+    private val addDeckUseCase: AddDeckUseCase,
+    private val updateDeckUseCase: UpdateDeckUseCase,
+    private val deleteDeckUseCase: DeleteDeckUseCase
 ) : ViewModel() {
+
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     var showDeckError by mutableStateOf(false)
 
     private val _deckItems = MutableStateFlow<List<Deck>>(emptyList())
@@ -54,13 +60,54 @@ class HomeViewModel @Inject constructor(
             )
             val response = addDeckUseCase(newDeck)
             if (response != null) {
-                loadData()
+                _deckItems.value = _deckItems.value.toMutableList().apply {
+                    add(response)
+                }
             } else {
                 showDeckError = true
             }
         }
     }
 
+    fun deleteDeck(deck: Deck) {
+        viewModelScope.launch {
+            deleteDeckUseCase(deck)
+            _deckItems.value = _deckItems.value.toMutableList().apply {
+                remove(deck)
+            }
+        }
+    }
+
+    fun editDeck(modifiedDeck: Deck, originalDeck: Deck) {
+        viewModelScope.launch {
+            if (originalDeck.name == modifiedDeck.name && originalDeck.description != modifiedDeck.description) {
+                updateDeckUseCase(modifiedDeck)
+                updateDeck(modifiedDeck)
+            } else if (originalDeck.name != modifiedDeck.name) {
+                val response = updateDeckUseCase(modifiedDeck, withNameValidation = true)
+                if (response) {
+                    updateDeck(modifiedDeck)
+                } else {
+                    showDeckError = true
+                }
+            }
+        }
+    }
+
+    private fun updateDeck(deck: Deck) {
+        _deckItems.value = _deckItems.value.map { deckFound ->
+            if (deckFound.id == deck.id) {
+                deckFound.copy(name = deck.name, description = deck.description)
+            } else {
+                deckFound
+            }
+        }
+    }
+
+    fun sync() {
+        print("syncing...")
+    }
+}
 //     fun addCardEvent(deckId: Int) {
 //         val updatedList = _deckItems.value.map { deck ->
 //             if (deck.id == deckId) {
@@ -73,7 +120,3 @@ class HomeViewModel @Inject constructor(
 //         _deckItems.value = updatedList
 //     }
 
-    fun sync() {
-        print("hola mundo")
-    }
-}

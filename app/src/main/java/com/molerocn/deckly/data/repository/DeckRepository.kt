@@ -25,7 +25,17 @@ class DeckRepository @Inject constructor(
         return deck.copy(id = id.toInt())
     }
 
-    suspend fun deckExist(front: String): Boolean {
-        return deckDao.deckExist(front)
+    suspend fun deckExistWithSameName(name: String): Boolean {
+        return deckDao.deckExist(name)
+    }
+
+    suspend fun updateDeck(deck: Deck) {
+        deckDao.updateDeck(deck.toEntityModel())
+    }
+
+    suspend fun deleteDeckFromDatabase(vararg decks: Deck) {
+        for (deck in decks) {
+            deckDao.deleteDecks(deck.toEntityModel())
+        }
     }
 }

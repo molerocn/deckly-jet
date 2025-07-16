@@ -21,18 +21,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.molerocn.deckly.domain.model.Deck
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddDeckModal(
+    isForEditDeck: Boolean = false,
+    deckForEdit: Deck = Deck(name = ""),
     sheetState: SheetState,
     onDismissEvent: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     // Form state
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf(if (isForEditDeck) deckForEdit.name else "") }
+    var description by remember { mutableStateOf(if (isForEditDeck) deckForEdit.description else "") }
     val scope = rememberCoroutineScope()
 
     return ModalBottomSheet(
@@ -54,7 +57,7 @@ fun AddDeckModal(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
@@ -65,12 +68,22 @@ fun AddDeckModal(
             Button(
                 onClick = {
                     if (title.isNotBlank()) {
-                        viewModel.addDeck(title.trim(), description.trim())
+                        if (isForEditDeck) {
+                            viewModel.editDeck(
+                                modifiedDeck = deckForEdit.copy(
+                                    name = title,
+                                    description = description
+                                ),
+                                originalDeck = deckForEdit
+                            )
+                        } else {
+                            viewModel.addDeck(title.trim(), description.trim())
+                        }
                         scope.launch {
                             sheetState.hide()
                         }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
-                                onDismissEvent()
+                                onDismissEvent() // ocultar entre otros xd
                                 title = ""
                                 description = ""
                             }
@@ -79,7 +92,7 @@ fun AddDeckModal(
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("Guardar")
+                Text(if (isForEditDeck) "Editar" else "Guardar")
             }
         }
     }

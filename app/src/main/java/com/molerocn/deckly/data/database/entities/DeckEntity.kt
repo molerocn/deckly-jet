@@ -15,6 +15,7 @@ data class DeckEntity(
 
 
 fun Deck.toEntityModel() = DeckEntity(
+    id = id,
     name = name,
     description = description
 )

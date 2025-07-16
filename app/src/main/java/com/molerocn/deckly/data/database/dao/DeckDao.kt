@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.molerocn.deckly.data.database.entities.DeckEntity
 
 // querys siguiendo la guia https://developer.android.com/training/data-storage/room/accessing-data
@@ -19,6 +20,9 @@ interface DeckDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDeck(deck: DeckEntity): Long
+
+    @Update
+    suspend fun updateDeck(deck: DeckEntity)
 
     @Delete
     suspend fun deleteDecks(vararg decks: DeckEntity)

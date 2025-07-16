@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.molerocn.deckly.R
@@ -72,16 +73,19 @@ fun DeckDetailScreen(
             ) {
                 Text(
                     text = name,
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = description,
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = if (mountCards > 0) "Tienes $mountCards tarjetas por estudiar hoy" else "No tienes tarjetas para estudiar hoy",
+                    textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
                 )
             }

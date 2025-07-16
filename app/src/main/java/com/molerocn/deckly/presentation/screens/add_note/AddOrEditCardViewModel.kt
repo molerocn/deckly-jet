@@ -89,13 +89,13 @@ class AddOrEditCardViewModel @Inject constructor(
                     front = frontText,
                     back = backText
                 )
-                if (frontForEdit != frontText || backForEdit != backText) {
-                    updateCardUseCase(card, withFrontValidation = true)
-                } else if (frontForEdit == frontText && backForEdit != backText) {
+                if (frontForEdit == frontText && backForEdit != backText) {
                     val response = updateCardUseCase(card, withFrontValidation = false)
                     if (!response) {
                         dialogMessage = "Ya existe una tarjeta con ese anverso"
                     }
+                } else if (frontForEdit != frontText) {
+                    updateCardUseCase(card, withFrontValidation = true)
                 }
                 successAction = true
             }
