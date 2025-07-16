@@ -1,5 +1,7 @@
 package com.molerocn.deckly.domain.model
 
+import com.molerocn.deckly.core.FSRSCard
+import com.molerocn.deckly.core.Rating
 import com.molerocn.deckly.data.database.entities.CardEntity
 
 enum class CardStatus {
@@ -12,13 +14,15 @@ enum class CardStatus {
 data class CardModel(
     val id: Int = 0,
     val deckId: Int,
-    val front: String,
     val back: String,
+    val front: String,
     val status: CardStatus = CardStatus.New,
     val due: Long = System.currentTimeMillis(),
     val lastReview: Long? = null,
     val reps: Int = 0,
-    val lapses: Int = 0
+    val lapses: Int = 0,
+    val stability:Double = 0.0,
+    val difficulty:Double = 0.0
 )
 
 fun CardEntity.toDomainModel() = CardModel(
@@ -30,5 +34,7 @@ fun CardEntity.toDomainModel() = CardModel(
     due = due,
     lastReview = lastReview,
     reps = reps,
-    lapses = lapses
+    lapses = lapses,
+    stability = stability,
+    difficulty = difficulty
 )

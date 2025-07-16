@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.molerocn.deckly.presentation.components.FabMenu
 import com.molerocn.deckly.presentation.components.Spinner
@@ -48,6 +49,12 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("Deckly") },
                 actions = {
+                    IconButton(onClick = { viewModel.sync() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_refresh),
+                            contentDescription = "Localized description"
+                        )
+                    }
                     IconButton(onClick = { onNavigate(Routes.PROFILE) }) {
                         Icon(
                             imageVector = Icons.Filled.AccountCircle,
@@ -82,30 +89,8 @@ fun HomeScreen(
                 .padding(paddingValues)
         ) {
             when {
-                isLoading -> Spinner()
-                deckItems.isEmpty() -> {
-                    //icon
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.empty_box),
-                            contentDescription = "No hay decks",
-                            modifier = Modifier
-                                .size(50.dp)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "No hay mazos aún",
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    }
-                }
-
+                isLoading -> {}
+                deckItems.isEmpty() -> ThereIsNoDecksContent()
                 else -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
@@ -117,7 +102,7 @@ fun HomeScreen(
                             val mount = deck.amountOfCardsToBeStudy
                             DeckItem(
                                 deck = deck,
-                                onClick = { onNavigate("deck_detail/${deck.id}/$name/$description/$mount") }
+                                onClick = { onNavigate("${Routes.DECK_DETAIL}/${deck.id}/$name/$description/$mount") }
                             )
                         }
                     }

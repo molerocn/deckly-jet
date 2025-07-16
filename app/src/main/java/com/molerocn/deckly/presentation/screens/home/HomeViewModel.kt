@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
 
     fun loadData() {
         viewModelScope.launch {
-            _deckItems.value = getDecksUseCase()
+            _deckItems.value = getDecksUseCase(withCardsCount = true)
             _deckItems.value.map { deck ->
                 Log.i("", "description: ${deck.description}")
             }
@@ -73,9 +73,7 @@ class HomeViewModel @Inject constructor(
 //         _deckItems.value = updatedList
 //     }
 
+    fun sync() {
+        print("hola mundo")
+    }
 }
-
-// prompt: necesito saber por que no se actualiza los deck de home screen, cuando creo un card desde
-// addnotescreen, quiero que el amountofCards de el deck en el que se creo un card se aumente en 1
-// cada vez que le doy en guardar desde el addnotescreen , te comparto los siguientes archivos
-// homeScreen, homeviewmodel, addnotescreen, addnoteviewmodel

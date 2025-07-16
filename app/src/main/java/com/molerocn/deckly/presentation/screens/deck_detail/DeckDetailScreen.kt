@@ -88,7 +88,7 @@ fun DeckDetailScreen(
 
             Button(
                 enabled = mountCards > 0,
-                onClick = { onNavigate("study_card/${deckId}") },
+                onClick = { onNavigate("${Routes.REVIEW_CARD}/${deckId}") },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp)

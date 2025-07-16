@@ -1,5 +1,6 @@
 package com.molerocn.deckly.domain.usecase
 
+import android.util.Log
 import com.molerocn.deckly.data.repository.CardRepository
 import com.molerocn.deckly.data.repository.DeckRepository
 import com.molerocn.deckly.domain.model.Deck
@@ -10,15 +11,15 @@ class GetDecksUseCase @Inject constructor(
     private val cardRepository: CardRepository
 ) {
 
-    suspend operator fun invoke(): List<Deck> {
+    suspend operator fun invoke(withCardsCount: Boolean): List<Deck> {
         val decks = deckRepository.getAllDecksFromDatabase()
+        Log.i("", "actuando aqui en get decks")
         return decks.map { deck ->
-            Deck(
-                id = deck.id,
-                name = deck.name,
-                description = deck.description,
-                amountOfCardsToBeStudy = cardRepository.amountOfDueCardsByDeck(deck.id)
-            )
+            if (withCardsCount) {
+                deck.copy(amountOfCardsToBeStudy = cardRepository.amountOfDueCardsByDeck(deck.id))
+            } else {
+                deck
+            }
         }
     }
 }

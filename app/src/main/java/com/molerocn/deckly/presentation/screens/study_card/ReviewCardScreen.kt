@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
@@ -25,33 +22,33 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.molerocn.deckly.presentation.components.Spinner
+import com.molerocn.deckly.R
 import com.molerocn.deckly.presentation.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun StudyCardScreen(
+fun ReviewCardScreen(
     onNavigate: (String) -> Unit,
     onBack: () -> Unit,
-    viewModel: StudyCardViewModel = hiltViewModel()
+    viewModel: ReviewCardViewModel = hiltViewModel()
 ) {
 
     val options = listOf("De nuevo", "Difícil", "Bien", "Facil")
-    var selectedIndex by remember { mutableIntStateOf(0) }
 
     val isLoading by viewModel.isLoading.collectAsState()
+    val hasHistoryStack by viewModel.hasHistoryStack.collectAsState()
+    val isThereNoCards by viewModel.isThereNoCards.collectAsState()
+    val isAnswerRevealed by viewModel.isAnswerRevealed.collectAsState()
     val currentCard by viewModel.currentCard.collectAsState()
 
     Scaffold(
@@ -66,11 +63,24 @@ fun StudyCardScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            imageVector = Icons.Filled.Create,
-                            contentDescription = "Localized description"
-                        )
+                    if (hasHistoryStack) {
+                        IconButton(onClick = { viewModel.goBackInHistory() }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_undo),
+                                contentDescription = "Volver a la última tarjeta"
+
+                            )
+                        }
+                    }
+                    if (!isThereNoCards) {
+                        IconButton(onClick = {
+                            onNavigate("${Routes.ADD_NOTE}?cardId=${currentCard!!.id}&deckId=${currentCard!!.deckId}&front=${currentCard!!.front}&back=${currentCard!!.back}")
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Create,
+                                contentDescription = "Editar tarjeta"
+                            )
+                        }
                     }
                 }
             )
@@ -82,7 +92,8 @@ fun StudyCardScreen(
                 .padding(paddingValues)
         ) {
             when {
-                isLoading -> Spinner()
+                isLoading -> {}
+                isThereNoCards -> FinishScreenContent()
                 else -> {
                     Column(
                         modifier = Modifier
@@ -94,11 +105,15 @@ fun StudyCardScreen(
                             text = currentCard!!.front,
                             style = MaterialTheme.typography.bodyLarge,
                         )
+                        Spacer(modifier = Modifier.height(16.dp))
                         HorizontalDivider(thickness = 2.dp)
-                        Text(
-                            text = currentCard!!.back,
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
+                        if (isAnswerRevealed) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = currentCard!!.back,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
                     }
 
                     Box(
@@ -106,24 +121,34 @@ fun StudyCardScreen(
                             .align(Alignment.BottomCenter)
                             .padding(bottom = 16.dp)
                     ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-                        ) {
+                        if (isAnswerRevealed) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                            ) {
 
-                            options.forEachIndexed { index, label ->
-                                val difficult = when (index) {
-                                    0 -> Difficult.AGAIN
-                                    1 -> Difficult.HARD
-                                    2 -> Difficult.GOOD
-                                    3 -> Difficult.EASY
-                                    else -> Difficult.EASY
+                                options.forEachIndexed { index, label ->
+                                    val difficult = when (index) {
+                                        0 -> Difficult.AGAIN
+                                        1 -> Difficult.HARD
+                                        2 -> Difficult.GOOD
+                                        3 -> Difficult.EASY
+                                        else -> Difficult.EASY
+                                    }
+                                    ElevatedButton(
+                                        onClick = { viewModel.reviewCard(difficult) },
+                                    ) {
+                                        Text(label)
+                                    }
                                 }
-                                ElevatedButton (
-                                    onClick = { viewModel.study(difficult) },
-                                ) {
-                                    Text(label)
-                                }
+                            }
+                        } else {
+                            Button(
+                                onClick = { viewModel.revealAnswer() },
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                            ) {
+                                Text(text = "Ver respuesta")
                             }
                         }
                     }

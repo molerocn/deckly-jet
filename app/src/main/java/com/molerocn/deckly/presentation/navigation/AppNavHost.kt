@@ -7,9 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.molerocn.deckly.presentation.screens.add_note.AddNoteScreen
+import com.molerocn.deckly.presentation.screens.add_note.AddOrEditCardScreen
 import com.molerocn.deckly.presentation.screens.deck_detail.DeckDetailScreen
-import com.molerocn.deckly.presentation.screens.study_card.StudyCardScreen
+import com.molerocn.deckly.presentation.screens.study_card.ReviewCardScreen
 import com.molerocn.deckly.presentation.screens.home.HomeScreen
 import com.molerocn.deckly.presentation.screens.login.LoginScreen
 import com.molerocn.deckly.presentation.screens.profile.ProfileScreen
@@ -48,10 +48,41 @@ fun AppNavHost(
                 }
             )
         }
-        composable(Routes.ADD_NOTE) {
-            AddNoteScreen(
+        composable(
+            route = "${Routes.ADD_NOTE}?cardId={cardId}&deckId={deckId}&front={front}&back={back}",
+
+            arguments = listOf(
+                navArgument("cardId") {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+                navArgument("deckId") {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+                navArgument("front") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                },
+                navArgument("back") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                },
+            )
+        ) { backStackEntry ->
+            val deckId = backStackEntry.arguments?.getInt("deckId") ?: 0
+            AddOrEditCardScreen(
+                deckId = deckId,
                 onBack = {
                     navController.popBackStack()
+                },
+                navController = navController,
+                onBackAfterInsert = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.HOME) { inclusive = true }
+                    }
                 }
             )
         }
@@ -66,7 +97,7 @@ fun AppNavHost(
             )
         }
         composable(
-            Routes.DECK_DETAIL,
+            "${Routes.DECK_DETAIL}/{deckId}/{name}/{description}/{mountCards}",
             arguments = listOf(
                 navArgument("deckId") { type = NavType.IntType },
                 navArgument("name") { type = NavType.StringType },
@@ -93,18 +124,20 @@ fun AppNavHost(
             )
         }
         composable(
-            Routes.STUDY_CARD,
+            "${Routes.REVIEW_CARD}/{deckId}",
             arguments = listOf(
                 navArgument("deckId") { type = NavType.IntType },
             )
         ) { backStackEntry ->
 
-            StudyCardScreen(
+            ReviewCardScreen(
                 onNavigate = { route ->
                     navController.navigate(route)
                 },
                 onBack = {
-                    navController.popBackStack()
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.HOME) { inclusive = true }
+                    }
                 },
             )
         }

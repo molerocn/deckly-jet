@@ -10,7 +10,7 @@ import com.molerocn.deckly.data.database.entities.ReviewLogEntity
 interface ReviewLogDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLog(log: ReviewLogEntity)
+    suspend fun insertLog(log: ReviewLogEntity): Long
 
     @Query("SELECT * FROM review_logs WHERE card_id = :cardId ORDER BY review_date DESC")
     suspend fun getLogsForCard(cardId: Int): List<ReviewLogEntity>

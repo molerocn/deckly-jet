@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.molerocn.deckly.domain.model.ReviewLogModel
 
 @Entity(
     tableName = "review_logs",
@@ -41,3 +42,12 @@ data class ReviewLogEntity(
     val status: String // "New", "Learning", etc.
 )
 
+fun ReviewLogModel.toEntityModel() = ReviewLogEntity(
+    id = id,
+    cardId = cardId,
+    rating = rating,
+    elapsedDays = elapsedDays,
+    scheduledDays = scheduledDays,
+    reviewDate = reviewDate,
+    status = status
+)

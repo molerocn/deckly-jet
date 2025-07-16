@@ -42,7 +42,7 @@ fun DeckItem(
             )
 
             Text(
-                text = "${deck.amountOfCardsToBeStudy} cards",
+                text = "${deck.amountOfCardsToBeStudy} tarjetas",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )

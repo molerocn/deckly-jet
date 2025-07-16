@@ -18,6 +18,10 @@ class CardRepository @Inject constructor(
     //
     //     // return response.map { it.toDomainModel() }
     // }
+    suspend fun getSingleCardById(cardId: Int): CardModel {
+        val response = cardDao.getCard(cardId)
+        return response.toDomainModel()
+    }
 
     suspend fun getCardsByDeckFromDatabase(deckId: Int): List<CardModel> {
         val response = cardDao.getCardsByDeck(deckId)
@@ -39,5 +43,9 @@ class CardRepository @Inject constructor(
 
     suspend fun isThereCardWithFrontInDeck(deckId: Int, front: String): Boolean {
         return cardDao.isThereCardWithFrontInDeck(deckId, front)
+    }
+
+    suspend fun updateCard(card: CardModel) {
+        cardDao.updateCard(card.toEntityModel())
     }
 }

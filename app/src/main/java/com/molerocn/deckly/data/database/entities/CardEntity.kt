@@ -49,5 +49,7 @@ fun CardModel.toEntityModel() = CardEntity(
     due = due,
     lastReview = lastReview,
     reps = reps,
-    lapses = lapses
+    lapses = lapses,
+    stability = stability,
+    difficulty = difficulty
 )

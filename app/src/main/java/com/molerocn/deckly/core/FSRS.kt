@@ -25,7 +25,7 @@ enum class Rating(val description: String) {
     }
 }
 
-class ReviewLog(
+data class ReviewLog(
     var rating: Rating,
     var elapsedDays: Double,
     var scheduledDays: Double,
@@ -248,7 +248,7 @@ class FSRS {
 
         if (card.status == Status.New) {
             initDS(s)
-            s.again.due = s.addTime(now, 1, TimeUnit.MINUTES)
+            // s.again.due = s.addTime(now, 1, TimeUnit.MINUTES)
             s.hard.due = s.addTime(now, 5, TimeUnit.MINUTES)
             s.good.due = s.addTime(now, 10, TimeUnit.MINUTES)
             val easyInterval = nextInterval(s.easy.stability)
